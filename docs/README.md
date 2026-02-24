@@ -1,10 +1,4 @@
-target: https://your-test-target.com
-max_pages: 50target: https://your-app.com
-auth:
-  enabled: true
-  username: user@example.com
-  password: password123
-  form_selector: "form#login"# WebScanner - Advanced Web Application Vulnerability Scanner
+# NexusDAST - Advanced Web Application Vulnerability Scanner
 
 **A sophisticated, OWASP-aligned security testing tool for identifying vulnerabilities in modern web applications.**
 
