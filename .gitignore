@@ -1,0 +1,76 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+*.egg-info/
+dist/
+build/
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Playwright
+.pyre/
+chromium/
+firefox/
+webkit/
+
+# Reports (generated, can be recreated)
+scan_report.json
+scan_report.html
+*.log
+
+# Sensitive data
+.env
+*.key
+*.pem
+config.local.yml
+credentials.txt
+
+# OS
+Thumbs.db
+.DS_Store
+*.bak
+
+# Temporary files
+*.tmp
+temp/
+tmp/
+
+# Node (if dashboard frontend in future)
+node_modules/
+npm-debug.log
+
+# Archive old projects
+webscanner/
+
+# Cache
+*.cache
+.cache/
+
+# Local development
+local_config.yml
+test_data/

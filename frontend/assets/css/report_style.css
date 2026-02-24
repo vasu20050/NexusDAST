@@ -1,0 +1,196 @@
+/* WebScanner Report Styling */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+.summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 30px;
+    background: #f8f9fa;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.summary-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.summary-card .label {
+    font-size: 0.9em;
+    color: #666;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.summary-card .value {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.summary-card.critical .value { color: #dc3545; }
+.summary-card.high .value { color: #fd7e14; }
+.summary-card.medium .value { color: #ffc107; }
+.summary-card.low .value { color: #28a745; }
+
+.content {
+    padding: 30px;
+}
+
+.severity-section {
+    margin-bottom: 40px;
+}
+
+.severity-section h2 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid;
+}
+
+.severity-section.critical h2 { border-bottom-color: #dc3545; color: #dc3545; }
+.severity-section.high h2 { border-bottom-color: #fd7e14; color: #fd7e14; }
+.severity-section.medium h2 { border-bottom-color: #ffc107; color: #ffc107; }
+.severity-section.low h2 { border-bottom-color: #28a745; color: #28a745; }
+
+.finding {
+    background: #f8f9fa;
+    border-left: 4px solid;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    page-break-inside: avoid;
+}
+
+.finding.critical { border-left-color: #dc3545; }
+.finding.high { border-left-color: #fd7e14; }
+.finding.medium { border-left-color: #ffc107; }
+.finding.low { border-left-color: #28a745; }
+
+.finding-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.finding-type {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #333;
+}
+
+.finding-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: white;
+}
+
+.finding-badge.critical { background: #dc3545; }
+.finding-badge.high { background: #fd7e14; }
+.finding-badge.medium { background: #ffc107; }
+.finding-badge.low { background: #28a745; }
+
+.finding-url {
+    color: #667eea;
+    word-break: break-all;
+    font-family: 'Courier New', monospace;
+    margin: 10px 0;
+}
+
+.finding-details {
+    margin-top: 15px;
+}
+
+.detail-row {
+    margin: 8px 0;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #555;
+    display: inline-block;
+    width: 120px;
+}
+
+.detail-value {
+    color: #333;
+    display: inline;
+}
+
+pre {
+    background: #2d2d2d;
+    color: #f8f8f2;
+    padding: 15px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 0.95em;
+    margin-top: 10px;
+}
+
+footer {
+    background: #f8f9fa;
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    font-size: 0.9em;
+    border-top: 1px solid #e0e0e0;
+}
+
+@media (max-width: 768px) {
+    header h1 { font-size: 1.8em; }
+    .summary { grid-template-columns: 1fr; }
+    .finding-header { flex-direction: column; align-items: flex-start; }
+    .finding-badge { margin-top: 10px; }
+}
+
+@media print {
+    body { background: white; }
+    .container { box-shadow: none; }
+    .finding { page-break-inside: avoid; }
+}
