@@ -7,6 +7,7 @@ A sophisticated, OWASP-aligned dynamic analysis tool for identifying critical se
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Status: Production Ready](https://img.shields.io/badge/Status-Production%20Ready-green.svg)]()
+[![Completion: 100%](https://img.shields.io/badge/Completion-100%25-brightgreen.svg)](ALL_TODOS_COMPLETE.md)
 
 ---
 
@@ -14,7 +15,7 @@ A sophisticated, OWASP-aligned dynamic analysis tool for identifying critical se
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/YOUR_USERNAME/NexusDAST.git
+git clone https://github.com/vasu20050/NexusDAST.git
 cd NexusDAST
 
 # 2. Install dependencies (backend folder)
