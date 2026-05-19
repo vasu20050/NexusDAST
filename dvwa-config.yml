@@ -1,0 +1,4 @@
+﻿target: http://localhost/dvwa
+max_pages: 15
+report:
+  format: both

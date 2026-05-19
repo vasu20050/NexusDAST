@@ -1,0 +1,16 @@
+target: "https://api.myapp.com"
+max_pages: 100
+
+auth:
+  enabled: true
+  login_url: "https://myapp.com/login"
+  username_selector: "input[name=email]"
+  password_selector: "input[name=password]"
+  submit_selector: "button.login-btn"
+  username: "admin@test.com"
+  password: "testpass123"
+
+report:
+  format: "json"
+  output_dir: "."
+  output: "api_scan.json"

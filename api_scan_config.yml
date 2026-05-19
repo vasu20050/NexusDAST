@@ -1,0 +1,31 @@
+target: "https://api.myapp.com"
+max_pages: 100
+timeout: 30
+
+auth:
+  enabled: true
+  login_url: "https://myapp.com/login"
+  username_selector: "input[name=email]"
+  password_selector: "input[name=password]"
+  submit_selector: "button.login-btn"
+  username: "admin@test.com"
+  password: "testpass123"
+
+scanning:
+  rate_limit: 5
+  max_concurrent: 3
+  checks:
+    sql_injection: true
+    reflected_xss: true
+    ssti: true
+    csti: true
+    bola: true
+    open_redirect: true
+    missing_headers: true
+    insecure_cookies: true
+    csrf: true
+
+report:
+  format: "json"
+  output_dir: "."
+  output: "api_scan.json"

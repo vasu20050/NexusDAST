@@ -1,4 +1,5 @@
-# NexusDAST - Advanced Web Application Vulnerability Scanner
+# NexusDAST# Create .github/workflows/security-scan.yml
+# Copy from docs/USAGE.md - Advanced Web Application Vulnerability Scanner
 
 **A sophisticated, OWASP-aligned security testing tool for identifying vulnerabilities in modern web applications.**
 
