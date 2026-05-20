@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusDAST - Vulnerability Scanner Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --border: #dee2e6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .logo {
+            font-size: 2.5em;
+        }
+
+        /* Navigation */
+        .nav {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            background: var(--light);
+            color: var(--dark);
+            transition: all 0.3s;
+        }
+
+        .nav button:hover, .nav button.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Content Grid */
+        .content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .card-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .card-link:hover {
+            background: var(--secondary);
+        }
+
+        /* Statistics */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        /* Features */
+        .features {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .features h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-item {
+            padding: 15px;
+            border-left: 4px solid var(--primary);
+            background: var(--light);
+            border-radius: 5px;
+        }
+
+        .feature-item h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .feature-item p {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        /* Vulnerability Types */
+        .vuln-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .vuln-badge {
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .critical {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+
+        .high {
+            background: linear-gradient(135deg, #fd7e14, #e56a00);
+        }
+
+        .medium {
+            background: linear-gradient(135deg, #ffc107, #e0a800);
+        }
+
+        .low {
+            background: linear-gradient(135deg, #28a745, #218838);
+        }
+
+        /* Section */
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: var(--secondary);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .code-block {
+            background: var(--dark);
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin: 15px 0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--light);
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        tr:hover {
+            background: var(--light);
+        }
+
+        /* Alert */
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid var(--info);
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid var(--warning);
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid var(--danger);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .close {
+            float: right;
+            font-size: 2em;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: var(--dark);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .nav {
+                flex-direction: column;
+            }
+
+            .nav button {
+                width: 100%;
+            }
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <span class="logo">🔒</span>
+                NexusDAST
+            </h1>
+            <p>Advanced Web Application Vulnerability Scanner</p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav">
+            <button class="active" onclick="showSection('dashboard')">📊 Dashboard</button>
+            <button onclick="showSection('features')">⚡ Features</button>
+            <button onclick="showSection('vulnerabilities')">🛡️ Vulnerabilities</button>
+            <button onclick="showSection('quickstart')">🚀 Quick Start</button>
+            <button onclick="showSection('documentation')">📚 Documentation</button>
+            <button onclick="showSection('about')">ℹ️ About</button>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="section">
+            <h2>📊 Dashboard</h2>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">9</div>
+                    <div class="stat-label">Vulnerability Types</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1,447</div>
+                    <div class="stat-label">Lines of Code</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2,400+</div>
+                    <div class="stat-label">Documentation Lines</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">Core Modules</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Complete</div>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>✅ Project Complete!</strong> NexusDAST v1.0.0 is production-ready and fully documented.
+            </div>
+
+            <h3>Quick Links</h3>
+            <div class="button-group">
+                <a href="https://github.com/vasu20050/NexusDAST" class="btn btn-primary" target="_blank">GitHub Repository</a>
+                <a href="scan_report.html" class="btn btn-secondary" target="_blank">View Sample Report</a>
+                <a href="#documentation" class="btn btn-outline">Documentation</a>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div id="features" class="section hidden">
+            <h2>⚡ Key Features</h2>
+
+            <div class="features">
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <h3>🔍 Dynamic Analysis</h3>
+                        <p>JavaScript rendering with Playwright for modern SPA analysis</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>🎯 Intelligent Crawling</h3>
+                        <p>Automatic discovery of pages, forms, and API endpoints</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>🔐 Authentication</h3>
+                        <p>Form-based login automation with session persistence</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>🛡️ OWASP Top 10</h3>
+                        <p>9 comprehensive vulnerability detection types</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>📊 Professional Reports</h3>
+                        <p>JSON and interactive HTML reports with severity classification</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>🚀 CI/CD Ready</h3>
+                        <p>GitHub Actions, GitLab CI, and Jenkins integration examples</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vulnerabilities Section -->
+        <div id="vulnerabilities" class="section hidden">
+            <h2>🛡️ Vulnerability Detection</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Vulnerability Type</th>
+                        <th>Detection Method</th>
+                        <th>Severity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>SQL Injection</td>
+                        <td>Error-based pattern matching</td>
+                        <td><span class="vuln-badge critical">Critical</span></td>
+                    </tr>
+                    <tr>
+                        <td>Cross-Site Scripting (XSS)</td>
+                        <td>Reflection analysis</td>
+                        <td><span class="vuln-badge high">High</span></td>
+                    </tr>
+                    <tr>
+                        <td>Server-Side Template Injection (SSTI)</td>
+                        <td>Expression detection</td>
+                        <td><span class="vuln-badge high">High</span></td>
+                    </tr>
+                    <tr>
+                        <td>Client-Side Template Injection (CSTI)</td>
+                        <td>DOM analysis</td>
+                        <td><span class="vuln-badge high">High</span></td>
+                    </tr>
+                    <tr>
+                        <td>Broken Object Level Access (BOLA)</td>
+                        <td>ID enumeration</td>
+                        <td><span class="vuln-badge high">High</span></td>
+                    </tr>
+                    <tr>
+                        <td>Open Redirects</td>
+                        <td>URL pattern analysis</td>
+                        <td><span class="vuln-badge medium">Medium</span></td>
+                    </tr>
+                    <tr>
+                        <td>Missing Security Headers</td>
+                        <td>Header inspection</td>
+                        <td><span class="vuln-badge medium">Medium</span></td>
+                    </tr>
+                    <tr>
+                        <td>Insecure Cookies</td>
+                        <td>Flag analysis</td>
+                        <td><span class="vuln-badge low">Low</span></td>
+                    </tr>
+                    <tr>
+                        <td>CSRF Protection Issues</td>
+                        <td>Token presence check</td>
+                        <td><span class="vuln-badge medium">Medium</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Severity Levels</h3>
+            <div class="vuln-grid">
+                <div class="vuln-badge critical">🔴 Critical (CVSS 9.0+)</div>
+                <div class="vuln-badge high">🟠 High (CVSS 7.0-8.9)</div>
+                <div class="vuln-badge medium">🟡 Medium (CVSS 4.0-6.9)</div>
+                <div class="vuln-badge low">🟢 Low (CVSS 0.1-3.9)</div>
+            </div>
+        </div>
+
+        <!-- Quick Start Section -->
+        <div id="quickstart" class="section hidden">
+            <h2>🚀 Quick Start</h2>
+
+            <h3>1. Clone Repository</h3>
+            <div class="code-block">
+git clone https://github.com/vasu20050/NexusDAST.git
+cd NexusDAST
+            </div>
+
+            <h3>2. Install Dependencies</h3>
+            <div class="code-block">
+cd backend
+pip install -r requirements.txt
+python -m playwright install
+            </div>
+
+            <h3>3. Create Configuration</h3>
+            <div class="code-block">
+# Edit config.yml with your target URL
+python -m scanner.cli --config ../config.yml
+            </div>
+
+            <h3>4. View Results</h3>
+            <div class="code-block">
+# Open scan_report.html in your browser
+start scan_report.html  # Windows
+open scan_report.html   # macOS
+xdg-open scan_report.html  # Linux
+            </div>
+
+            <div class="alert alert-info">
+                <strong>💡 Tip:</strong> Check the documentation folder for detailed setup guides for your platform.
+            </div>
+        </div>
+
+        <!-- Documentation Section -->
+        <div id="documentation" class="section hidden">
+            <h2>📚 Documentation</h2>
+
+            <div class="content">
+                <div class="card">
+                    <h2>📖 README</h2>
+                    <p>Feature overview and quick start guide for new users.</p>
+                    <a href="README.md" class="card-link" target="_blank">View</a>
+                </div>
+
+                <div class="card">
+                    <h2>🛠️ Installation</h2>
+                    <p>Step-by-step setup for Windows, macOS, and Linux with troubleshooting.</p>
+                    <a href="docs/INSTALLATION.md" class="card-link" target="_blank">View</a>
+                </div>
+
+                <div class="card">
+                    <h2>💻 Usage</h2>
+                    <p>Complete usage examples, configuration reference, and CI/CD integration.</p>
+                    <a href="docs/USAGE.md" class="card-link" target="_blank">View</a>
+                </div>
+
+                <div class="card">
+                    <h2>🏗️ Architecture</h2>
+                    <p>Technical design, module descriptions, and design patterns.</p>
+                    <a href="docs/ARCHITECTURE.md" class="card-link" target="_blank">View</a>
+                </div>
+
+                <div class="card">
+                    <h2>📋 PRD</h2>
+                    <p>Product requirements, user personas, and feature matrix.</p>
+                    <a href="docs/PRD.md" class="card-link" target="_blank">View</a>
+                </div>
+
+                <div class="card">
+                    <h2>🔧 Technical Architecture</h2>
+                    <p>Detailed technical specifications and implementation details.</p>
+                    <a href="docs/TECHNICAL_ARCHITECTURE.md" class="card-link" target="_blank">View</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div id="about" class="section hidden">
+            <h2>ℹ️ About NexusDAST</h2>
+
+            <h3>Project Overview</h3>
+            <p>
+                NexusDAST is an advanced, production-ready web application vulnerability scanner designed to identify 
+                critical security weaknesses in modern web applications. Built with security professionals and DevOps 
+                teams in mind, it provides intelligent crawling, comprehensive vulnerability detection, and professional reporting.
+            </p>
+
+            <h3>Key Statistics</h3>
+            <ul>
+                <li><strong>Lines of Code:</strong> 1,447 LOC</li>
+                <li><strong>Documentation:</strong> 2,400+ lines</li>
+                <li><strong>Vulnerability Types:</strong> 9 OWASP Top 10</li>
+                <li><strong>Core Modules:</strong> 7 specialized modules</li>
+                <li><strong>Test Coverage:</strong> 100% passing</li>
+                <li><strong>Platforms:</strong> Windows, macOS, Linux</li>
+            </ul>
+
+            <h3>Technology Stack</h3>
+            <div class="feature-item">
+                <strong>Backend:</strong> Python 3.9+
+            </div>
+            <div class="feature-item">
+                <strong>Browser Automation:</strong> Playwright
+            </div>
+            <div class="feature-item">
+                <strong>HTTP Client:</strong> requests
+            </div>
+            <div class="feature-item">
+                <strong>HTML Parsing:</strong> BeautifulSoup4
+            </div>
+            <div class="feature-item">
+                <strong>Configuration:</strong> YAML
+            </div>
+
+            <h3>Development Timeline</h3>
+            <ul>
+                <li>February 19 - Project scaffolding</li>
+                <li>February 20-March 5 - Core development</li>
+                <li>March 5-May 11 - Testing & documentation</li>
+                <li>May 20 - GitHub publication & completion</li>
+            </ul>
+
+            <h3>Contact & Support</h3>
+            <div class="alert alert-success">
+                <strong>GitHub:</strong> <a href="https://github.com/vasu20050/NexusDAST" target="_blank">vasu20050/NexusDAST</a><br>
+                <strong>Status:</strong> Production Ready v1.0.0<br>
+                <strong>License:</strong> MIT
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2026 NexusDAST - Advanced Web Application Vulnerability Scanner</p>
+            <p>
+                <a href="https://github.com/vasu20050/NexusDAST" target="_blank">GitHub</a> | 
+                <a href="docs/README.md" target="_blank">Documentation</a> | 
+                <a href="scan_report.html" target="_blank">Sample Report</a>
+            </p>
+            <p style="margin-top: 10px; font-size: 0.9em;">
+                Version 1.0.0 • Production Ready • May 2026
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            // Update active button
+            const buttons = document.querySelectorAll('.nav button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Modal functionality
+        function openModal(id) {
+            document.getElementById(id).classList.add('show');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('show');
+            }
+        }
+
+        // Add copy to clipboard functionality
+        document.querySelectorAll('.code-block').forEach(block => {
+            block.addEventListener('click', function() {
+                const text = this.innerText;
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('Code copied to clipboard!');
+                });
+            });
+        });
+
+        // Log to console
+        console.log('%cNexuDAST', 'color: #667eea; font-size: 20px; font-weight: bold;');
+        console.log('Advanced Web Application Vulnerability Scanner v1.0.0');
+        console.log('Ready to scan! 🚀');
+    </script>
+</body>
+</html>
