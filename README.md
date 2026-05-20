@@ -34,6 +34,26 @@ xdg-open scan_report.html  # Linux
 
 **That's it!** Your first vulnerability scan is complete. 🎉
 
+### 🌐 View Interactive Dashboard
+
+```bash
+# Windows - double-click:
+run_server.bat
+
+# macOS/Linux:
+./run_server.sh
+
+# Or use Python directly (all platforms):
+python run_server.py
+
+# Then open in browser:
+# http://localhost:8000
+```
+
+✅ Access the dashboard with live documentation, quick start, and sample reports!
+
+📖 **[Complete Server Guide →](RUNNING_LOCALLY.md)**
+
 ---
 
 ## 🎯 Key Features
@@ -312,11 +332,12 @@ See [docs/USAGE.md](docs/USAGE.md) for GitLab CI and Jenkins examples.
 
 ## 🚀 Getting Started
 
-1. **Read** [docs/README.md](docs/README.md) for complete feature overview
-2. **Install** following [docs/INSTALLATION.md](docs/INSTALLATION.md)
-3. **Try** the [Quick Start](#-quick-start) demo
-4. **Customize** [backend/examples/config.yml](backend/examples/config.yml)
-5. **Integrate** with your CI/CD using [docs/USAGE.md](docs/USAGE.md)
+1. **View Dashboard**: Run `python run_server.py` and open http://localhost:8000 (see [RUNNING_LOCALLY.md](RUNNING_LOCALLY.md))
+2. **Read** [docs/README.md](docs/README.md) for complete feature overview
+3. **Install** following [docs/INSTALLATION.md](docs/INSTALLATION.md)
+4. **Try** the [Quick Start](#-quick-start) demo
+5. **Customize** [backend/examples/config.yml](backend/examples/config.yml)
+6. **Integrate** with your CI/CD using [docs/USAGE.md](docs/USAGE.md)
 
 ---
 
