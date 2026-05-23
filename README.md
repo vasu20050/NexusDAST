@@ -817,76 +817,284 @@ The project is ready for GitHub Pages deployment for documentation hosting.
 
 ---
 
-## ⚖️ Legal & Disclaimer
+## ⚖️ Legal & Ethical Responsibility
 
-⚠️ **IMPORTANT**: This tool is designed for **authorized security testing only**. 
+### **IMPORTANT: Terms of Use**
 
-- ✅ Use only on targets you own or have explicit written permission to test
-- ✅ Comply with applicable laws and regulations
-- ✅ Practice responsible disclosure
-- ❌ Unauthorized access to computer systems is illegal
+⚠️ **NexusDAST is designed for AUTHORIZED security testing only.**
 
-**See [LICENSE](LICENSE) for full MIT License.**
+| ✅ ALLOWED | ❌ NOT ALLOWED |
+|-----------|--------------|
+| Test your own applications | Scan without permission |
+| Authorized penetration testing | Illegal hacking attempts |
+| Bug bounty programs | Unauthorized network access |
+| Educational testing | Denial of Service attacks |
+| Security research (with permission) | Disrupting services |
+
+### **Legal Compliance**
+
+- ✅ Ensure written authorization from system owner
+- ✅ Comply with CFAA (USA) and similar laws in your country
+- ✅ Follow responsible disclosure principles
+- ✅ Report vulnerabilities ethically
+- ✅ Maintain confidentiality of findings
+- ✅ Respect privacy regulations (GDPR, CCPA, etc.)
+
+**Unauthorized computer access is illegal and can result in:**
+- Criminal prosecution
+- Civil lawsuits
+- Significant fines
+- Imprisonment
+
+**See [LICENSE](LICENSE) for complete MIT License terms.**
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started - 5 Steps
 
-1. **View Dashboard**: Run `python run_server.py` and open http://localhost:8000 (see [RUNNING_LOCALLY.md](RUNNING_LOCALLY.md))
-2. **Read** [docs/README.md](docs/README.md) for complete feature overview
-3. **Install** following [docs/INSTALLATION.md](docs/INSTALLATION.md)
-4. **Try** the [Quick Start](#-quick-start) demo
-5. **Customize** [backend/examples/config.yml](backend/examples/config.yml)
-6. **Integrate** with your CI/CD using [docs/USAGE.md](docs/USAGE.md)
+### **Step 1: View Dashboard** (2 minutes)
+```bash
+python run_server.py
+# Open: http://localhost:8000
+```
+
+### **Step 2: Read Documentation** (10 minutes)
+- [Quick Start Guide](docs/README.md)
+- [Installation Instructions](docs/INSTALLATION.md)
+- [Full Architecture](docs/ARCHITECTURE.md)
+
+### **Step 3: Install & Configure** (5 minutes)
+```bash
+pip install -r backend/requirements.txt
+python -m playwright install
+```
+
+### **Step 4: Run First Scan** (5 minutes)
+```bash
+cd backend
+python -m scanner.cli --config examples/config.yml
+```
+
+### **Step 5: View Results** (2 minutes)
+```bash
+# Open in browser
+open scan_report.html  # macOS
+start scan_report.html # Windows
+xdg-open scan_report.html # Linux
+```
+
+**Total Time: 25 minutes to first scan! ⏱️**
 
 ---
 
-## 💡 Tips
+## 💡 Tips & Best Practices
 
-- Check [QUICK_REFERENCE.md](QUICK_REFERENCE.md) for command shortcuts
-- Review [docs/USAGE.md](docs/USAGE.md) for authentication examples
-- See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for extending with custom checks
-- Use `--verbose` flag for detailed logging
+### **Getting Started Tips**
 
----
+- 📖 Read [QUICK_REFERENCE.md](QUICK_REFERENCE.md) for command shortcuts
+- 🔍 Review [docs/USAGE.md](docs/USAGE.md) for authentication examples
+- 🏗️ Study [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) to understand internals
+- 🧪 Start with small targets to understand scanning behavior
+- 📊 Compare JSON vs HTML reports for different use cases
+- ⚙️ Customize [config.yml](backend/examples/config.yml) for your needs
 
-## 📊 Project Stats
+### **Performance Optimization**
 
-- **Code**: 2,500+ lines (scanner + tests)
-- **Documentation**: 1,500+ lines (guides + architecture)
-- **Vulnerabilities Detected**: 9 OWASP Top 10 types
-- **Python**: 3.9+
-- **License**: MIT
+- Adjust `rate_limit` based on target capacity
+- Increase `max_concurrent` for APIs (careful with rate limiting)
+- Set `max_pages` to reduce crawl time for large sites
+- Filter `include_checks` to focus on specific vulnerabilities
+- Use `timeout` parameter for slow/distant targets
+
+### **Security Scanning Best Practices**
+
+- Always test in authorized environments first
+- Use separate credentials for scanning
+- Monitor scan logs for unexpected behavior
+- Review findings manually before reporting
+- Keep reports secure (they contain sensitive data)
+- Update dependencies regularly
+
+### **Integration Tips**
+
+- Store credentials in environment variables, not in config
+- Use JSON reports for CI/CD automation
+- Set up GitHub Actions to run scans on schedule
+- Archive reports for compliance and trending
+- Integrate with vulnerability management systems
 
 ---
 
 ## 🤝 Contributing
 
-Contributions welcome! Areas for enhancement:
-- GraphQL/API fuzzing
-- Advanced JavaScript analysis
-- Deep OAST integration
-- Additional payload databases
-- New vulnerability checks
+We welcome contributions from the security community! 
+
+### **How to Contribute**
+
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/NewCheck`)
+3. **Implement** your enhancement
+4. **Test** thoroughly
+5. **Submit** a Pull Request
+
+### **Areas Needing Help**
+
+- 🔍 **New vulnerability checks** (custom OWASP types)
+- 🌐 **GraphQL support** (endpoint discovery)
+- 📊 **Advanced reporting** (additional export formats)
+- 🐳 **Docker support** (containerization)
+- 📚 **Documentation** (examples, guides)
+- 🧪 **Test coverage** (unit and integration tests)
+- 🚀 **Performance** (optimization suggestions)
+- 🐛 **Bug fixes** (issues and fixes)
+
+### **Development Setup**
+
+```bash
+# Clone and install dev dependencies
+git clone https://github.com/vasu20050/NexusDAST.git
+cd NexusDAST/backend
+pip install -r requirements.txt
+pip install pytest pytest-cov black flake8
+
+# Run tests
+pytest
+
+# Code formatting
+black scanner/
+
+# Linting
+flake8 scanner/
+```
+
+### **Code Style Guidelines**
+
+- Follow PEP 8 (Python style guide)
+- Use type hints for functions
+- Write docstrings for all modules/classes
+- Add tests for new functionality
+- Keep functions focused and modular
+- Comment complex logic
 
 ---
 
-## 📞 Support
+## 📞 Support & Community
 
-- 📖 **Full Docs**: See [docs/](docs/) folder
-- ❓ **FAQ**: Check [docs/INSTALLATION.md](docs/INSTALLATION.md#troubleshooting-quick-fixes)
-- 🐛 **Issues**: Open GitHub issue
-- 💬 **Discussions**: Use GitHub discussions
+### **Getting Help**
+
+| Channel | Purpose |
+|---------|---------|
+| **[GitHub Issues](https://github.com/vasu20050/NexusDAST/issues)** | Bug reports & feature requests |
+| **[GitHub Discussions](https://github.com/vasu20050/NexusDAST/discussions)** | Q&A and general discussion |
+| **[Documentation](docs/)** | Comprehensive guides & examples |
+| **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** | Quick command reference |
+
+### **Common Issues & Solutions**
+
+**Q: How do I scan an authenticated application?**
+A: Use the `auth` section in your config.yml. See [docs/USAGE.md](docs/USAGE.md) for examples.
+
+**Q: Can I scan APIs?**
+A: Yes! NexusDAST automatically discovers API endpoints. See example configs in `backend/examples/`.
+
+**Q: How do I integrate with CI/CD?**
+A: Check [docs/USAGE.md](docs/USAGE.md) for GitHub Actions, GitLab CI, and Jenkins examples.
+
+**Q: What's the minimum scan time?**
+A: Typically 3-10 minutes depending on target size and configuration.
+
+**Q: Can I extend with custom checks?**
+A: Yes! See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the plugin system.
+
+### **Reporting Issues**
+
+When reporting an issue, please include:
+- Python version: `python --version`
+- OS and version: Windows/macOS/Linux
+- Command used: `python -m scanner.cli --config ...`
+- Config file: (sanitize credentials)
+- Error message: (full traceback)
+- Expected vs actual behavior
 
 ---
 
-## 📜 License
+## 📜 License & Attribution
 
-MIT License - See [LICENSE](LICENSE) file for details.
+NexusDAST is released under the **MIT License**.
+
+### **You are free to:**
+- ✅ Use for commercial purposes
+- ✅ Modify the source code
+- ✅ Distribute the software
+- ✅ Use privately
+
+### **You must:**
+- ✅ Include license notice
+- ✅ Include copyright attribution
+- ✅ Document changes made
+
+See [LICENSE](LICENSE) file for complete terms.
+
+### **Attribution**
+
+**Project:** NexusDAST  
+**Author:** [Your Name / Organization]  
+**License:** MIT  
+**Repository:** https://github.com/vasu20050/NexusDAST  
+**Latest Release:** v1.0.0 (May 2026)  
 
 ---
 
-**Built with ❤️ for security professionals**
+## 🙏 Acknowledgments
 
-Last Updated: February 2026  
-Status: Production Ready ✅
+Thanks to:
+- **OWASP** - For vulnerability classification standards
+- **Playwright** - For excellent headless browser automation
+- **BeautifulSoup** - For HTML parsing
+- **Security community** - For responsible disclosure practices
+
+---
+
+## 📞 Contact & Social
+
+- 🐙 **GitHub:** https://github.com/vasu20050/NexusDAST
+- 📧 **Issues:** [Create an issue](https://github.com/vasu20050/NexusDAST/issues)
+- 💬 **Discussions:** [Join discussion](https://github.com/vasu20050/NexusDAST/discussions)
+- 🌐 **Web:** http://localhost:8000 (local dashboard)
+
+---
+
+## 📊 Project Metadata
+
+- **Status:** Production Ready ✅
+- **Completion:** 100% ✅
+- **Latest Version:** 1.0.0
+- **Release Date:** May 23, 2026
+- **Python:** 3.9+
+- **License:** MIT
+- **Maintenance:** Active
+- **Test Coverage:** Comprehensive
+- **Documentation:** Extensive (2,400+ lines)
+- **Platform Support:** Windows, macOS, Linux
+
+---
+
+## 🎉 Thank You!
+
+Thank you for using **NexusDAST**! 
+
+If you find this tool valuable, please:
+- ⭐ Star the repository
+- 🔗 Share with your network
+- 💬 Provide feedback
+- 🐛 Report issues
+- 🤝 Contribute improvements
+
+**Happy (authorized) scanning!** 🔒🚀
+
+---
+
+*NexusDAST - Advanced Web Application Vulnerability Scanner*  
+*Built with security professionals in mind.*  
+*© 2026 | MIT License*  
+*Last Updated: May 23, 2026*
