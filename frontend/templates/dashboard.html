@@ -308,6 +308,208 @@
                 padding: 20px;
             }
         }
+
+        /* ===== ANIMATIONS ===== */
+
+        /* Fade In */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Slide In */
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Bounce In */
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Pulse */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(102, 126, 234, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+            }
+        }
+
+        /* Float */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Glow */
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+            }
+            100% {
+                box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+            }
+        }
+
+        /* Slide Down */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Apply animations */
+
+        .navbar {
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .navbar-title {
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        .btn-navbar {
+            animation: bounceIn 0.6s ease-out;
+        }
+
+        .btn-navbar:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .btn-navbar:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .dashboard {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .dashboard-header {
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .dashboard-header h1 {
+            animation: slideInLeft 0.6s ease-out 0.2s backwards;
+        }
+
+        .dashboard-header p {
+            animation: fadeIn 0.6s ease-out 0.3s backwards;
+        }
+
+        .scan-list-title {
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        .scan-item {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .scan-item:nth-child(1) { animation-delay: 0.2s; }
+        .scan-item:nth-child(2) { animation-delay: 0.3s; }
+        .scan-item:nth-child(3) { animation-delay: 0.4s; }
+        .scan-item:nth-child(4) { animation-delay: 0.5s; }
+        .scan-item:nth-child(5) { animation-delay: 0.6s; }
+
+        .scan-item:hover {
+            animation: glow 1.5s ease-in-out infinite;
+        }
+
+        .empty-state {
+            animation: bounceIn 0.8s ease-out;
+        }
+
+        .stat-card {
+            animation: bounceIn 0.6s ease-out;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.2s; }
+        .stat-card:nth-child(2) { animation-delay: 0.3s; }
+        .stat-card:nth-child(3) { animation-delay: 0.4s; }
+        .stat-card:nth-child(4) { animation-delay: 0.5s; }
+
+        .stat-card:hover {
+            animation: pulse 2s infinite;
+        }
+
+        .btn {
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .btn:hover {
+            animation: pulse 0.6s ease-out;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.4s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        /* Scroll animation trigger */
+        .fade-in-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+
+        .fade-in-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -364,17 +566,194 @@
 
     <script src="../assets/js/scan_viewer.js"></script>
     <script>
+        // ===== REFRESH DASHBOARD =====
         function refreshDashboard() {
-            location.reload();
+            const dashboard = document.querySelector('.dashboard');
+            dashboard.style.animation = 'pulse 0.6s ease-out';
+            setTimeout(() => {
+                location.reload();
+            }, 600);
         }
 
+        // ===== GO HOME =====
         function goHome() {
-            window.location.href = '/index.html';
+            const dashboard = document.querySelector('.dashboard');
+            dashboard.style.animation = 'slideUp 0.4s ease-out forwards';
+            setTimeout(() => {
+                window.location.href = '/index.html';
+            }, 400);
         }
 
-        // Log to console
+        // ===== INTERSECTION OBSERVER FOR SCROLL ANIMATIONS =====
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements
+        document.querySelectorAll('.scan-item, .stat-card').forEach(element => {
+            element.classList.add('fade-in-on-scroll');
+            observer.observe(element);
+        });
+
+        // ===== ANIMATE STAT NUMBERS =====
+        function animateCounter(element, target, duration = 1000) {
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+
+            const counter = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target;
+                    clearInterval(counter);
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, 16);
+        }
+
+        // Animate when visible
+        const statObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const numbers = entry.target.querySelectorAll('.stat-value');
+                    numbers.forEach(num => {
+                        const text = num.textContent.replace(/[^0-9]/g, '');
+                        if (text) {
+                            animateCounter(num, parseInt(text), 1500);
+                        }
+                    });
+                    statObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const statsContainer = document.getElementById('stats-container');
+        if (statsContainer) {
+            statObserver.observe(statsContainer);
+        }
+
+        // ===== RIPPLE EFFECT ON BUTTONS =====
+        document.querySelectorAll('.btn, button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+
+                ripple.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.5);
+                    left: ${x}px;
+                    top: ${y}px;
+                    animation: ripple-effect 0.6s ease-out;
+                    pointer-events: none;
+                `;
+
+                if (!this.style.position || this.style.position === 'static') {
+                    this.style.position = 'relative';
+                }
+
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Add ripple animation
+        if (!document.querySelector('style[data-ripple]')) {
+            const style = document.createElement('style');
+            style.setAttribute('data-ripple', 'true');
+            style.textContent = `
+                @keyframes ripple-effect {
+                    from {
+                        transform: scale(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: scale(4);
+                        opacity: 0;
+                    }
+                }
+                @keyframes slideUp {
+                    from {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                    to {
+                        opacity: 0;
+                        transform: translateY(-30px);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // ===== SCROLL TO TOP BUTTON =====
+        const scrollTopBtn = document.createElement('button');
+        scrollTopBtn.id = 'scrollTopBtn';
+        scrollTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+        scrollTopBtn.style.cssText = `
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            z-index: 999;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        `;
+
+        document.body.appendChild(scrollTopBtn);
+
+        window.addEventListener('scroll', () => {
+            if (document.documentElement.scrollTop > 300) {
+                scrollTopBtn.style.display = 'flex';
+            } else {
+                scrollTopBtn.style.display = 'none';
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        scrollTopBtn.addEventListener('mouseover', () => {
+            scrollTopBtn.style.transform = 'scale(1.2)';
+            scrollTopBtn.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)';
+        });
+
+        scrollTopBtn.addEventListener('mouseleave', () => {
+            scrollTopBtn.style.transform = 'scale(1)';
+            scrollTopBtn.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
+        });
+
+        // ===== CONSOLE MESSAGE =====
         console.log('%cNexusDAST Dashboard', 'color: #667eea; font-size: 18px; font-weight: bold;');
-        console.log('Vulnerability scan management interface');
+        console.log('%cVulnerability scan management interface', 'color: #8b9eff; font-size: 12px;');
+        console.log('✨ Enhanced with smooth animations!');
     </script>
 </body>
 </html>
