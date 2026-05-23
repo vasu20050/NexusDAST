@@ -1,87 +1,93 @@
-// WebScanner Report Interactive Features
+// NexusDAST Report Interactive Features - Enhanced Version
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('%cNexusDAST Report Viewer', 'color: #667eea; font-size: 18px; font-weight: bold;');
     initializeReportFeatures();
 });
 
 function initializeReportFeatures() {
-    // Add expand/collapse functionality
+    // Initialize all features
     addFindingToggle();
-    
-    // Add filter functionality
     addSeverityFilter();
-    
-    // Add search functionality
     addSearchFeature();
-    
-    // Add copy-to-clipboard for URLs
     addCopyFeature();
-    
-    // Add print styling
     addPrintFeatures();
+    displayStatistics();
+    setupScrollAnimations();
 }
 
-// Toggle finding details
+// ===== Finding Toggle Functionality =====
 function addFindingToggle() {
     const findings = document.querySelectorAll('.finding');
     
-    findings.forEach(finding => {
+    findings.forEach((finding, index) => {
         const header = finding.querySelector('.finding-header');
         const details = finding.querySelector('.finding-details');
         
         if (header && details) {
             header.style.cursor = 'pointer';
+            
+            // Set initial state
+            let isExpanded = true;
+            details.style.display = 'block';
+            
             header.addEventListener('click', function(e) {
+                // Prevent click if clicking on badge
                 if (e.target.classList.contains('finding-badge')) return;
-                details.style.display = details.style.display === 'none' ? 'block' : 'none';
-                header.style.opacity = details.style.display === 'none' ? 0.7 : 1;
+                
+                isExpanded = !isExpanded;
+                details.style.display = isExpanded ? 'block' : 'none';
+                header.style.opacity = isExpanded ? '1' : '0.7';
+                
+                // Add smooth animation
+                if (isExpanded) {
+                    details.style.animation = 'fadeIn 0.3s ease-out';
+                }
             });
         }
     });
 }
 
-// Filter findings by severity
+// ===== Severity Filter Functionality =====
 function addSeverityFilter() {
-    const container = document.querySelector('header');
-    if (!container) return;
+    const header = document.querySelector('header');
+    if (!header) return;
     
     const filterDiv = document.createElement('div');
     filterDiv.className = 'filter-controls';
-    filterDiv.style.cssText = 'margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;';
     
-    const severities = ['critical', 'high', 'medium', 'low', 'all'];
+    const severities = [
+        { name: 'critical', icon: '🔴', label: 'Critical' },
+        { name: 'high', icon: '🟠', label: 'High' },
+        { name: 'medium', icon: '🟡', label: 'Medium' },
+        { name: 'low', icon: '🟢', label: 'Low' },
+        { name: 'all', icon: '📋', label: 'All' }
+    ];
     
-    severities.forEach(severity => {
+    severities.forEach((severity, index) => {
         const btn = document.createElement('button');
-        btn.textContent = severity.charAt(0).toUpperCase() + severity.slice(1);
+        btn.innerHTML = `${severity.icon} ${severity.label} <span id="count-${severity.name}">0</span>`;
         btn.className = 'filter-btn';
-        btn.dataset.severity = severity;
-        btn.style.cssText = 'padding: 8px 16px; border: 2px solid rgba(255,255,255,0.3); ' +
-                          'background: rgba(255,255,255,0.1); color: white; border-radius: 20px; ' +
-                          'cursor: pointer; transition: all 0.3s;';
-        
-        btn.addEventListener('mouseover', function() {
-            this.style.background = 'rgba(255,255,255,0.2)';
-        });
-        
-        btn.addEventListener('mouseout', function() {
-            this.style.background = 'rgba(255,255,255,0.1)';
-        });
+        btn.dataset.severity = severity.name;
         
         btn.addEventListener('click', function() {
-            filterBySeverity(severity);
+            filterBySeverity(severity.name);
+            
+            // Update active state
             document.querySelectorAll('.filter-btn').forEach(b => {
-                b.style.opacity = '0.5';
+                b.style.opacity = b === this ? '1' : '0.6';
             });
-            this.style.opacity = '1';
         });
         
         filterDiv.appendChild(btn);
-        if (severity === 'all') btn.style.opacity = '1';
-        else btn.style.opacity = '0.5';
+        if (severity.name === 'all') btn.style.opacity = '1';
+        else btn.style.opacity = '0.6';
     });
     
-    container.appendChild(filterDiv);
+    header.appendChild(filterDiv);
+    
+    // Update counts
+    updateFilterCounts();
 }
 
 function filterBySeverity(severity) {
@@ -96,48 +102,117 @@ function filterBySeverity(severity) {
     }
 }
 
-// Search findings
+function updateFilterCounts() {
+    const severities = ['critical', 'high', 'medium', 'low'];
+    
+    severities.forEach(severity => {
+        const count = document.querySelectorAll(`.finding.${severity}`).length;
+        const countEl = document.getElementById(`count-${severity}`);
+        if (countEl) {
+            countEl.textContent = count > 0 ? `(${count})` : '';
+        }
+    });
+    
+    const totalCount = document.querySelectorAll('.finding').length;
+    const countEl = document.getElementById('count-all');
+    if (countEl) {
+        countEl.textContent = totalCount > 0 ? `(${totalCount})` : '';
+    }
+}
+
+// ===== Search Functionality =====
 function addSearchFeature() {
-    const container = document.querySelector('header');
-    if (!container) return;
+    const header = document.querySelector('header');
+    if (!header) return;
     
     const searchDiv = document.createElement('div');
-    searchDiv.style.cssText = 'margin-top: 10px;';
+    searchDiv.style.cssText = 'margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;';
     
     const searchInput = document.createElement('input');
     searchInput.type = 'text';
-    searchInput.placeholder = 'Search findings...';
+    searchInput.placeholder = '🔍 Search findings by type, URL, or details...';
     searchInput.className = 'search-input';
-    searchInput.style.cssText = 'padding: 10px 15px; width: 300px; border: none; border-radius: 5px; max-width: 90%;';
+    searchInput.style.cssText = 'padding: 12px 16px; width: 100%; max-width: 500px; border: 2px solid rgba(255,255,255,0.3); ' +
+                               'background: rgba(255,255,255,0.1); color: white; border-radius: 8px; ' +
+                               'font-size: 0.95em; transition: all 0.3s;';
+    
+    searchInput.addEventListener('focus', function() {
+        this.style.background = 'rgba(255,255,255,0.15)';
+        this.style.borderColor = 'rgba(255,255,255,0.5)';
+    });
+    
+    searchInput.addEventListener('blur', function() {
+        this.style.background = 'rgba(255,255,255,0.1)';
+        this.style.borderColor = 'rgba(255,255,255,0.3)';
+    });
     
     searchInput.addEventListener('input', function(e) {
         searchFindings(e.target.value);
     });
     
+    // Clear button
+    const clearBtn = document.createElement('button');
+    clearBtn.textContent = '✕';
+    clearBtn.style.cssText = 'padding: 8px 12px; background: rgba(255,255,255,0.1); color: white; ' +
+                            'border: none; border-radius: 6px; cursor: pointer; font-weight: 600;';
+    clearBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        searchFindings('');
+    });
+    
     searchDiv.appendChild(searchInput);
-    container.appendChild(searchDiv);
+    searchDiv.appendChild(clearBtn);
+    header.appendChild(searchDiv);
 }
 
 function searchFindings(query) {
     const findings = document.querySelectorAll('.finding');
     const lowerQuery = query.toLowerCase();
+    let matchCount = 0;
     
-    findings.forEach(finding => {
-        const text = finding.textContent.toLowerCase();
-        finding.style.display = text.includes(lowerQuery) ? 'block' : 'none';
-    });
+    if (query === '') {
+        findings.forEach(finding => {
+            finding.style.display = 'block';
+        });
+    } else {
+        findings.forEach(finding => {
+            const findingType = finding.querySelector('.finding-type')?.textContent.toLowerCase() || '';
+            const findingUrl = finding.querySelector('.finding-url')?.textContent.toLowerCase() || '';
+            const findingDetails = finding.querySelector('.finding-details')?.textContent.toLowerCase() || '';
+            
+            const matches = findingType.includes(lowerQuery) || 
+                          findingUrl.includes(lowerQuery) || 
+                          findingDetails.includes(lowerQuery);
+            
+            finding.style.display = matches ? 'block' : 'none';
+            if (matches) matchCount++;
+        });
+    }
+    
+    // Show search results count
+    console.log(`Found ${matchCount} matching findings`);
 }
 
-// Copy URL to clipboard
+// ===== Copy to Clipboard =====
 function addCopyFeature() {
     const urls = document.querySelectorAll('.finding-url');
     
     urls.forEach(url => {
         url.style.cursor = 'pointer';
+        url.title = 'Click to copy URL';
+        
         url.addEventListener('click', function(e) {
             e.preventDefault();
             copyToClipboard(this.textContent);
-            showNotification('URL copied to clipboard!');
+            showNotification('✓ URL copied to clipboard!', 'success');
+        });
+        
+        url.addEventListener('mouseenter', function() {
+            this.style.background = 'rgba(102, 126, 234, 0.3)';
+        });
+        
+        url.addEventListener('mouseleave', function() {
+            this.style.background = 'rgba(0, 0, 0, 0.2)';
         });
     });
 }
@@ -145,57 +220,90 @@ function addCopyFeature() {
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).catch(err => {
         console.error('Failed to copy:', err);
+        showNotification('✗ Failed to copy', 'error');
     });
 }
 
-function showNotification(message) {
+// ===== Notifications =====
+function showNotification(message, type = 'success') {
     const notification = document.createElement('div');
     notification.textContent = message;
-    notification.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #28a745; ' +
-                                'color: white; padding: 15px 20px; border-radius: 5px; ' +
-                                'box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index: 1000; font-weight: 600;';
+    
+    const bgColor = type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#667eea';
+    
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${bgColor};
+        color: white;
+        padding: 16px 24px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 1000;
+        font-weight: 600;
+        animation: slideIn 0.3s ease-out;
+    `;
     
     document.body.appendChild(notification);
     
     setTimeout(() => {
-        notification.style.opacity = '0';
-        notification.style.transition = 'opacity 0.3s';
+        notification.style.animation = 'slideOut 0.3s ease-out';
         setTimeout(() => notification.remove(), 300);
-    }, 2000);
+    }, 3000);
 }
 
-// Print and export features
+// ===== Print & Export Features =====
 function addPrintFeatures() {
     const header = document.querySelector('header');
     if (!header) return;
     
     const controls = document.createElement('div');
-    controls.style.cssText = 'margin-top: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;';
+    controls.style.cssText = 'margin-top: 20px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;';
     
     // Print button
     const printBtn = document.createElement('button');
-    printBtn.textContent = '🖨️ Print Report';
-    printBtn.style.cssText = baseButtonStyle + 'background: rgba(255,255,255,0.2);';
+    printBtn.innerHTML = '<i class="fas fa-print"></i> Print Report';
+    printBtn.style.cssText = 'padding: 10px 20px; border: 2px solid rgba(255,255,255,0.3); ' +
+                            'background: rgba(255,255,255,0.1); color: white; border-radius: 6px; ' +
+                            'cursor: pointer; transition: all 0.3s; font-weight: 600;';
+    
     printBtn.addEventListener('click', function() {
         window.print();
+        showNotification('📄 Opening print dialog...', 'info');
     });
+    
+    printBtn.addEventListener('mouseover', function() {
+        this.style.background = 'rgba(255,255,255,0.2)';
+    });
+    
+    printBtn.addEventListener('mouseout', function() {
+        this.style.background = 'rgba(255,255,255,0.1)';
+    });
+    
     controls.appendChild(printBtn);
     
     // Export JSON button
     const exportBtn = document.createElement('button');
-    exportBtn.textContent = '💾 Export JSON';
-    exportBtn.style.cssText = baseButtonStyle + 'background: rgba(255,255,255,0.2);';
+    exportBtn.innerHTML = '<i class="fas fa-download"></i> Export JSON';
+    exportBtn.style.cssText = printBtn.style.cssText;
+    
     exportBtn.addEventListener('click', function() {
         exportAsJSON();
     });
+    
+    exportBtn.addEventListener('mouseover', function() {
+        this.style.background = 'rgba(255,255,255,0.2)';
+    });
+    
+    exportBtn.addEventListener('mouseout', function() {
+        this.style.background = 'rgba(255,255,255,0.1)';
+    });
+    
     controls.appendChild(exportBtn);
     
     header.appendChild(controls);
 }
-
-const baseButtonStyle = 'padding: 10px 20px; border: 2px solid rgba(255,255,255,0.4); ' +
-                       'color: white; border-radius: 5px; cursor: pointer; transition: all 0.3s; ' +
-                       'font-weight: 600;';
 
 function exportAsJSON() {
     const findings = [];
@@ -209,30 +317,42 @@ function exportAsJSON() {
             
             const url = finding.querySelector('.finding-url')?.textContent || '';
             const type = finding.querySelector('.finding-type')?.textContent || '';
+            const details = finding.querySelector('.finding-details')?.textContent || '';
             
             findings.push({
                 severity: severity,
                 type: type,
                 url: url,
+                details: details.substring(0, 200),
                 timestamp: new Date().toISOString()
             });
         });
     });
     
-    const dataStr = JSON.stringify({ findings: findings, exportedAt: new Date().toISOString() }, null, 2);
+    const data = {
+        report: {
+            title: 'NexusDAST Vulnerability Report',
+            generatedAt: new Date().toISOString(),
+            totalFindings: findings.length
+        },
+        findings: findings,
+        statistics: calculateStatistics()
+    };
+    
+    const dataStr = JSON.stringify(data, null, 2);
     const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
     
-    const exportFileDefaultName = 'scan_report_' + new Date().toISOString().split('T')[0] + '.json';
+    const fileName = 'nexusdast_report_' + new Date().toISOString().split('T')[0] + '.json';
     
     const linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.setAttribute('download', fileName);
     linkElement.click();
     
-    showNotification('Report exported as JSON!');
+    showNotification('✓ Report exported successfully!', 'success');
 }
 
-// Statistics calculation
+// ===== Statistics =====
 function calculateStatistics() {
     const findings = document.querySelectorAll('.finding');
     const stats = {
@@ -246,21 +366,73 @@ function calculateStatistics() {
     return stats;
 }
 
-// Dark mode toggle
-function addDarkModeToggle() {
-    const header = document.querySelector('header');
-    if (!header) return;
-    
-    const btn = document.createElement('button');
-    btn.textContent = '🌙 Dark Mode';
-    btn.style.cssText = 'position: fixed; top: 20px; right: 20px; padding: 10px 15px; ' +
-                       'background: #667eea; color: white; border: none; border-radius: 5px; ' +
-                       'cursor: pointer; font-weight: 600; z-index: 999;';
-    
-    btn.addEventListener('click', function() {
-        document.body.style.filter = document.body.style.filter === 'invert(1)' ? 'none' : 'invert(1)';
-        btn.textContent = document.body.style.filter === 'invert(1)' ? '☀️ Light Mode' : '🌙 Dark Mode';
-    });
-    
-    document.body.appendChild(btn);
+function displayStatistics() {
+    const stats = calculateStatistics();
+    console.log('Scan Statistics:', stats);
 }
+
+// ===== Scroll Animations =====
+function setupScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    document.querySelectorAll('.finding, .summary-card').forEach(element => {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(20px)';
+        element.style.transition = 'all 0.5s ease';
+        observer.observe(element);
+    });
+}
+
+// ===== Add animations to document =====
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            max-height: 0;
+        }
+        to {
+            opacity: 1;
+            max-height: 1000px;
+        }
+    }
+    
+    .search-input::placeholder {
+        color: rgba(255,255,255,0.6);
+    }
+`;
+document.head.appendChild(style);
