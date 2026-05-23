@@ -3,151 +3,381 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebScanner - Vulnerability Dashboard</title>
+    <title>NexusDAST - Vulnerability Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/report_style.css">
     <style>
-        .dashboard {
-            background: white;
-            border-radius: 10px;
-            margin: 20px auto;
-            max-width: 1200px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        :root {
+            --primary: #667eea;
+            --primary-light: #8b9eff;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #06b6d4;
+            --dark: #0f172a;
+            --dark-secondary: #1e293b;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+            --text: #334155;
+            --text-light: #64748b;
         }
-        
-        .dashboard-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        .dashboard-header h1 {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-        
-        .scan-list {
-            padding: 30px;
-        }
-        
-        .scan-item {
-            background: #f8f9fa;
-            border-left: 4px solid #667eea;
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--dark-secondary) 100%);
+            min-height: 100vh;
             padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 5px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.1);
+            padding: 1rem 0;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: transform 0.3s, box-shadow 0.3s;
+            padding: 0 30px;
         }
-        
+
+        .navbar-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .navbar-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-navbar {
+            padding: 10px 20px;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .btn-navbar:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .dashboard {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(226, 232, 240, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .dashboard-header p {
+            opacity: 0.95;
+            font-size: 1.05em;
+        }
+
+        .scan-list {
+            padding: 30px;
+        }
+
+        .scan-list-title {
+            color: #fff;
+            font-size: 1.5em;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .scan-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--primary);
+            padding: 24px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            border: 1px solid rgba(226, 232, 240, 0.1);
+        }
+
         .scan-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateX(8px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.2);
         }
-        
+
         .scan-info {
             flex: 1;
         }
-        
+
         .scan-target {
-            font-weight: bold;
+            font-weight: 700;
             font-size: 1.1em;
-            margin-bottom: 5px;
-            color: #333;
+            margin-bottom: 8px;
+            color: #fff;
         }
-        
+
         .scan-meta {
             font-size: 0.9em;
-            color: #666;
+            color: var(--text-light);
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
         }
-        
+
+        .scan-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
         .scan-actions {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
-        
+
         .btn {
             padding: 10px 20px;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
-        
+
         .btn-view {
-            background: #667eea;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
         }
-        
+
         .btn-view:hover {
-            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
-        
+
         .btn-delete {
-            background: #dc3545;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .btn-delete:hover {
+            background: var(--danger);
             color: white;
         }
-        
-        .btn-delete:hover {
-            background: #c82333;
-        }
-        
+
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
-            color: #999;
+            padding: 80px 20px;
+            color: var(--text-light);
         }
-        
-        .empty-state img {
-            width: 100px;
-            opacity: 0.5;
+
+        .empty-state i {
+            font-size: 4em;
+            opacity: 0.3;
             margin-bottom: 20px;
         }
-        
+
+        .empty-state p {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
-            margin-top: 20px;
+            margin-top: 30px;
         }
-        
+
         .stat-card {
-            background: white;
-            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
             border-radius: 8px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(226, 232, 240, 0.1);
+            transition: all 0.3s;
         }
-        
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-4px);
+        }
+
         .stat-label {
-            font-size: 0.8em;
-            color: #999;
+            font-size: 0.85em;
+            color: var(--text-light);
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        
+
         .stat-value {
             font-size: 2em;
-            font-weight: bold;
-            color: #667eea;
-            margin-top: 5px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-content {
+                flex-direction: column;
+                gap: 15px;
+                padding: 20px;
+            }
+
+            .scan-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .scan-actions {
+                width: 100%;
+                margin-top: 15px;
+            }
+
+            .btn {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .dashboard-header h1 {
+                font-size: 1.8em;
+            }
+
+            .dashboard-header {
+                padding: 30px 20px;
+            }
+
+            .scan-list {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="dashboard">
-        <div class="dashboard-header">
-            <h1>🔒 WebScanner Dashboard</h1>
-            <p>Vulnerability Assessment & Management</p>
+    <div class="navbar">
+        <div class="navbar-content">
+            <h2 class="navbar-title"><i class="fas fa-shield-alt"></i> NexusDAST Dashboard</h2>
+            <div class="navbar-actions">
+                <button class="btn-navbar" onclick="refreshDashboard()"><i class="fas fa-sync"></i> Refresh</button>
+                <button class="btn-navbar" onclick="goHome()"><i class="fas fa-home"></i> Home</button>
+            </div>
         </div>
-        
-        <div class="scan-list">
-            <h2 style="margin-bottom: 20px; color: #333;">Recent Scans</h2>
-            
-            <!-- Scanner would populate this with actual scan results -->
-            <div id="scans-container">
+    </div>
+
+    <div class="container">
+        <div class="dashboard">
+            <div class="dashboard-header">
+                <h1><i class="fas fa-list"></i> Vulnerability Scan Reports</h1>
+                <p>Browse and manage your security scan results</p>
+            </div>
+
+            <div class="scan-list">
+                <h3 class="scan-list-title"><i class="fas fa-history"></i> Recent Scans</h3>
+
+                <!-- Scanner would populate this with actual scan results -->
+                <div id="scans-container">
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No scan reports found yet.</p>
+                        <p style="font-size: 0.95em; margin-top: 10px;">Run the scanner to generate vulnerability reports.</p>
+                    </div>
+                </div>
+
+                <div class="stats-grid" id="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Scans</div>
+                        <div class="stat-value" id="total-scans">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Critical Issues</div>
+                        <div class="stat-value" style="color: var(--danger);">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">High Issues</div>
+                        <div class="stat-value" style="color: var(--warning);">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Last Scan</div>
+                        <div class="stat-value" id="last-scan" style="font-size: 1em;">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/scan_viewer.js"></script>
+    <script>
+        function refreshDashboard() {
+            location.reload();
+        }
+
+        function goHome() {
+            window.location.href = '/index.html';
+        }
+
+        // Log to console
+        console.log('%cNexusDAST Dashboard', 'color: #667eea; font-size: 18px; font-weight: bold;');
+        console.log('Vulnerability scan management interface');
+    </script>
+</body>
+</html>
                 <div class="empty-state">
                     <p>No scan reports found yet.</p>
                     <p style="margin-top: 10px; font-size: 0.9em;">Run the scanner to generate vulnerability reports.</p>
