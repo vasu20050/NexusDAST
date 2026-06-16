@@ -2,7 +2,6 @@
 
 # NexusDAST Local Development Server Launcher for macOS/Linux
 # This script starts the HTTP server and opens the dashboard
-
 echo ""
 echo "============================================================"
 echo "NexusDAST Development Server"
