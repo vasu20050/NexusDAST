@@ -1,5 +1,4 @@
 target: "https://api.myapp.com"
-
 max_pages: 100
 
 auth:
